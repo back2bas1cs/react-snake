@@ -1,10 +1,10 @@
 import './App.css';
-import Board from "./components/Board/Board.jsx";
+import SnakeGame from "./components/SnakeGame.jsx";
 
 function App() {
   return (
     <div className="App">
-      <Board />
+      <SnakeGame />
     </div>
   );
 }

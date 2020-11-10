@@ -1,2 +1,15 @@
-☐ create grid
-☐ add random react logo (apples  )
+// get the snake direction state working  
+  // automatically choose a random direction when you initialize app
+  // respond to arrow keypresses → change direction
+  // and thennnnn get div to respond to the directions and actually move in respective direction
+// add "fruit" dynamics to game
+  // generate fruit on initialization in random "tile" position
+  // whenever we go over fruit, randomly generate another position that isn't the position of snake
+  // maybe use array structure for snake (array of arrays) → outer array is length and inner arrays are x,y coordinates of each "piece"
+  // then, add "length" to snake when it travels over fruit (add another position)
+    // when snake "hits itself" (if at any time, next coordinate position is included in outer array, then "dead")
+    // 
+// 
+// add variability for boundaries
+  // first, make snake "die" (end game) when head of snake hits boundary (x → goes under left or over right boundary) vice versa for y
+  // then, add functionality for "edge overflow" of snake (it passes the right boundary and continues on left)
