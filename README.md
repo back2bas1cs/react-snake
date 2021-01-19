@@ -1,1 +1,0 @@
-# Snake (Create-React-App)
