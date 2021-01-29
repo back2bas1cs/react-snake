@@ -5,10 +5,20 @@ import { variables } from "./configVariables.js";
 import Board from "./Board/Board.jsx";
 
 function App() {
-
   const [gridMap, setGridMap] = useState(generateGrid(variables.DIMENSION));
+  // const gridRef = useRef(gridMap);
+  // const setGridMap = data => {
+  //   gridRef.current = data;
+  //   _setGridMap(data);
+  // };
   const [food, setFood] = useState(getRandomPosition(variables.DIMENSION, gridMap));
-  const [snake, setSnake] = useState([getRandomPosition(variables.DIMENSION, gridMap)]);
+  const [snake, _setSnake] = useState([getRandomPosition(variables.DIMENSION, gridMap)]);
+  const snakeRef = useRef(snake);
+  const setSnake = data => {
+    snakeRef.current = data;
+    _setSnake(data);
+  }
+  // const [tail, setTail] = useState(snake[0]);
   const [direction, _setDirection] = useState(null);
   const directionRef = useRef(direction); 
   const setDirection = data => {
@@ -26,7 +36,9 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // let updatedGrid = gridRef.current;
     let updatedGrid = generateGrid(variables.DIMENSION);
+    // updatedGrid[tail.y][tail.x] = "blank";
     snake.forEach(segment => {
       updatedGrid[segment.y][segment.x] = "snake";
     });
@@ -37,14 +49,13 @@ function App() {
   function handleKeyPress(e) {
     e.preventDefault();
     const key = variables.DIRECTIONS[String(e.keyCode)];
-    // console.log(direction, directionRef.current);
     if (
       // if key pressed was an arrow key
-      (key === "up" || key === "down" || key === "left" || key === "right") &&
+      key &&
       // if said arrow key wasn't the same as the current direction (avoid superflous calls to setDirection())
       key !== directionRef.current &&
       // if snake is just "head" piece (hasn't eaten yet), OR we're NOT trying to move in the exact opposite direction
-      (snake.length === 1 || directionRef.current !== variables.DIRECTIONS.opposites[key])
+      (snakeRef.current.length === 1 || directionRef.current !== variables.DIRECTIONS.opposites[key])
     ) {
       setDirection(key);
     }
@@ -74,31 +85,29 @@ function App() {
         newSnake.push(segment);
       });
     }   
+    // setTail(snake[snake.length - 1]);
     // check for gameover: snake runs into itself, or hits boundary
-    // checkGameOver(newSnake[0]);
-    // check if snake eats food 
-    if (snake[0].x === food.x && snake[0].y === food.y) {
-      handleLevelUp();
-    } else { // else remove tail (to create illusion of movement)
-      newSnake.pop();
-    }
-    // update snake array
+    checkGameOver(newSnake[0]);
+    // check if snake has eaten food
+    if (snake[0].x === food.x && snake[0].y === food.y) handleEatFood(newSnake.length);
+    else newSnake.pop(); // else remove tail (to create illusion of movement)
+    // update state of snake array
     setSnake(newSnake);
   }
 
-  // function checkGameOver(snakeHead) {
-  //   const headLocation = gridMap[snakeHead.y][snakeHead.x];
-  //   if (!headLocation || (headLocation === "snake" && snake.length > 1)) alert("Game Over!");
-  // }
+  function checkGameOver(snakeHead) {
+    const headLocation = gridMap[snakeHead.y][snakeHead.x] || null;
+    if (!headLocation || (headLocation === "snake" && snake.length > 1)) alert("Game Over!");
+  }
 
-  function handleLevelUp() {
+  function handleEatFood(currentSnakeLength) {
+    console.log(currentSnakeLength);
     // generate new food position
     setFood(getRandomPosition(variables.DIMENSION, gridMap));
-    // increase speed
-    setSpeed(prevSpeed => {
-      let newSpeed = prevSpeed - variables.SPEED_INCREMENT;
-      return newSpeed < 0 ? 100 : newSpeed;
-    });
+    // if snake has eaten 'LVL_UP_INCREMENT' pieces of food → increase speed by 'SPEED_PERCENT_INCREASE' percent of current speed
+    if (currentSnakeLength % variables.LVL_UP_INCREMENT) {
+      setSpeed(prevSpeed => prevSpeed * ((100 - variables.SPEED_PERCENT_INCREASE) / 100));
+    }
   }
 
   useInterval(moveSnake, speed);

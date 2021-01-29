@@ -5,8 +5,10 @@ export const variables = {
   WIDTH: 100,
   // starting speed of snake (moves one tile per 'START_SPEED' ms)
   START_SPEED: 500,
-  // increment by which speed of snake increases (in ms)
-  SPEED_INCREMENT: 100,
+  // percent increment (of START_SPEED) by which speed of snake increases 
+  SPEED_PERCENT_INCREASE: 10,
+  // how many pieces of food snake must eat before it levels up (increases in speed)
+  LVL_UP_INCREMENT: 5,
   // directions for snake to travel -- mapped to associated key codes (arrow keys)
   DIRECTIONS: {
     "38": "up",
