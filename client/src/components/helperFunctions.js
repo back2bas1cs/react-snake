@@ -20,19 +20,19 @@ export function getRandomPosition(dimension, grid) {
       x: randomCoordinate(), 
       y: randomCoordinate()
     };
-  } while (grid[position.x][position.y] !== "empty");
+  } while (grid[position.y][position.x] !== "empty");
   return position;
 }
 
 export function useInterval(callback, delay) {
   const savedCallback = useRef();
-  
-  // Remember the latest callback.
+
+  // recall lastest callback
   useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
   
-  // Set up the interval.
+  // set up interval
   useEffect(() => {
     function tick() {
       savedCallback.current();
